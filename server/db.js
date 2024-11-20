@@ -6,7 +6,10 @@ const client = new pg.Client(
 
 // unique keys
 const uuid = require("uuid");
+// bcrypt for password
+const bcrypt = require("bcrypt");
 
+// createTables fxn
 const createTables = async () => {
   const SQL = /* sql */ `
         DROP TABLE IF EXISTS favorites;
@@ -41,7 +44,11 @@ const createUser = async ({ username, password }) => {
         VALUES($1, $2, $3) 
         RETURNING *
     `;
-  const response = await client.query(SQL, [uuid.v4(), username, password]);
+  const response = await client.query(SQL, [
+    uuid.v4(),
+    username,
+    await bcrypt.hash(password, 5),
+  ]);
   return response.rows[0];
 };
 
