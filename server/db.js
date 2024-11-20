@@ -9,9 +9,9 @@ const uuid = require("uuid");
 
 const createTables = async () => {
   const SQL = /* sql */ `
+        DROP TABLE IF EXISTS favorites;
         DROP TABLE IF EXISTS users;
         DROP TABLE IF EXISTS products;
-        DROP TABLE IF EXISTS favorites;
 
         CREATE TABLE users(
         id UUID PRIMARY KEY,
@@ -41,7 +41,7 @@ const createUser = async ({ username, password }) => {
         VALUES($1, $2, $3) 
         RETURNING *
     `;
-  const response = await client.query(SQL, [uuid4(), username, password]);
+  const response = await client.query(SQL, [uuid.v4(), username, password]);
   return response.rows[0];
 };
 
@@ -52,7 +52,7 @@ const createProduct = async ({ name }) => {
         VALUES($1, $2)
         RETURNING *
     `;
-  const response = await client.query(SQL, [uuid4(), name]);
+  const response = await client.query(SQL, [uuid.v4(), name]);
   return response.rows[0];
 };
 
@@ -81,7 +81,7 @@ const createFavorite = async ({ product_id, user_id }) => {
         VALUES($1, $2, $3)
         RETURNING *
     `;
-  const response = await client.query(SQL, [uuid4(), product_id, user_id]);
+  const response = await client.query(SQL, [uuid.v4(), product_id, user_id]);
   return response.rows[0];
 };
 
